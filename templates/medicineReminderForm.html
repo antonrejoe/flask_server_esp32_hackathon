@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medicine Reminder</title>
+  </head>
+  <body>
+    <h1>Medicine Reminder System</h1>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <p>
+        {{ form.name.label }}<br />
+        {{ form.name() }}<br />
+        {% for error in form.name.errors %}
+        <span style="color: red">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>
+        {{ form.dosage.label }}<br />
+        {{ form.dosage() }}<br />
+        {% for error in form.dosage.errors %}
+        <span style="color: red">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>
+        {{ form.time.label }}<br />
+        {{ form.time() }}<br />
+        {% for error in form.time.errors %}
+        <span style="color: red">[{{ error }}]</span>
+        {% endfor %}
+      </p>
+      <p>{{ form.submit() }}</p>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Leaflet Map with OpenStreetMap</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+      #map {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      var map = L.map("map").setView([51.505, -0.09], 13); // Default view
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      var marker;
+
+      function updateMap() {
+        fetch("/latest-gps")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.latitude && data.longitude) {
+              var lat = data.latitude;
+              var lng = data.longitude;
+
+              if (marker) {
+                marker.setLatLng([lat, lng]);
+              } else {
+                marker = L.marker([lat, lng])
+                  .addTo(map)
+                  .bindPopup("Latest GPS location")
+                  .openPopup();
+              }
+
+              map.setView([lat, lng], 13); // Update map view
+            } else {
+              console.error("Invalid data received");
+            }
+          })
+          .catch((error) => console.error("Error fetching GPS data:", error));
+      }
+
+      // Update map every 10 seconds
+      setInterval(updateMap, 10000);
+
+      // Initial update
+      updateMap();
+    </script>
+  </body>
+</html>
